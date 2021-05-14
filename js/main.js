@@ -1,69 +1,36 @@
-import { Car } from "./car.js";
-import { Background } from "./background.js";
 
-const scene = new THREE.Scene();
+import { createScene, scene, renderer, camera, WIDTH, HEIGHT} from './word.js';
+import { createLights } from './lights.js';
+import { createSky, sky } from './sky.js';
+import { createCar, updateCar, handleMouseMove, car } from './car.js';
 
-// elements
-const playerCar = Car();
-scene.add(playerCar);
+window.addEventListener('load', init, false);
 
-const bg = Background();
-scene.add(bg);
+function init() {
+	// set up the scene, the camera and the renderer
+	createScene();
 
-// lights
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-scene.add(ambientLight);
+	// add the lights
+	createLights(scene);
 
-const directionalLight = new THREE.DirectionalLight();
-directionalLight.position.set(100, -300, 400);
-scene.add(directionalLight);
+	// add the objects
+	createSky(scene);
+	createCar(scene);
+	// createSky();
 
-// camera
-const aspectRatio = window.innerWidth / window.innerHeight;
-const cameraWidth = 150;
-const cameraHeight = cameraWidth / aspectRatio;
-const camera = new THREE.OrthographicCamera(
-    cameraWidth / -2,
-    cameraWidth / 2,
-    cameraHeight / 2,
-    cameraHeight / -2,
-    0,
-    1000
-);
-camera.position.set(200, -200, 300);
-camera.up.set(0, 0, 1);
-camera.lookAt(0, 0, 0);
+    //add the listener
+	document.addEventListener('mousemove', handleMouseMove, false);
 
-// renderer
-const renderer = new THREE.WebGL1Renderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-animateScene();
-
-document.addEventListener("keydown", event => {
-    if(event.key == 'w') {
-        playerCar.position.x -= 0.2;
-        playerCar.rotation.y -= 0.1;
-    }
-
-    if(event.key == 's') {
-        playerCar.position.x += 0.2;
-        playerCar.rotation.y += 0.1;
-    }
-            
-    if(event.key == 'a') {
-        playerCar.position.y -= 0.2;
-        playerCar.rotation.x += 0.1;
-    }
-                
-    if(event.key == 'd') {
-        playerCar.position.y += 0.2;
-        playerCar.rotation.x -= 0.1;
-    }
-});
-
-function animateScene() {
-    requestAnimationFrame(animateScene);
-    renderer.render(scene, camera);
+	// start a loop
+	loop();
 }
 
-document.body.appendChild(renderer.domElement);
+function loop() {
+	sky.mesh.rotation.y += .03;
+
+    // update the car on each frame
+	updateCar();
+
+	requestAnimationFrame(loop);
+	renderer.render(scene, camera);
+}
