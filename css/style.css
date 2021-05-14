@@ -13,9 +13,19 @@ body {
 }
 
 #universe {
+	position: relative;
 	width: 960px;
 	height: 540px;
 	overflow: hidden;
 	border-radius: 12px;
 	background: linear-gradient(#0f124a, #073c9b);
+}
+
+#points {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	text-align: right;
+	color: #ffffff;
+	font: bold 24pt Arial,sans-serif;
 }

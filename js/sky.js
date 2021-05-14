@@ -1,4 +1,4 @@
-import { Colors, Center } from './global.js';
+import { Colors } from './globals.js';
 
 export var sky;
 
@@ -16,10 +16,10 @@ var Sky = function(){
     // star generator
     for(let i = 0; i < this.numberOfStars; i++) {
         
-        let geom = new THREE.BoxGeometry(8, 8, 8);
+        let geom = new THREE.PlaneGeometry(8, 8);
 	    let mat = new THREE.MeshPhongMaterial({ color: Colors.white });
 
-        let star = new THREE.Mesh(geom, mat); 
+        let star = new THREE.Mesh(geom, mat);
         this.skyElements.push(star);
     }
 
@@ -33,10 +33,11 @@ var Sky = function(){
 
         skyElement.position.set(
             Math.cos(a)*h,
-            Center.y - 1200 + Math.random() * 2400,
+            -1200 + Math.random() * 2400,
             Math.sin(a)*h
         );
 
+        skyElement.lookAt(0 ,0 ,0);
         this.mesh.add(skyElement);
     });
 }

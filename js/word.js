@@ -1,18 +1,10 @@
-import { Center } from './global.js';
+import { Dimensions, aspectRatio } from './globals.js';
 
 export var 
-	scene, camera, fieldOfView, aspectRatio,
-	nearPlane, farPlane, HEIGHT, WIDTH, renderer, container;
+	scene, camera, fieldOfView,
+	nearPlane, farPlane, renderer, container;
 
 export function createScene() {
-	// Get the width and the height of the screen,
-	// use them to set up the aspect ratio of the camera 
-	// and the size of the renderer.
-	container = document.getElementById('universe');
-	WIDTH = container.getBoundingClientRect().width;
-	HEIGHT = container.getBoundingClientRect().height;
-	console.log(WIDTH, HEIGHT);
-
 	// Create the scene
 	scene = new THREE.Scene();
 
@@ -21,7 +13,6 @@ export function createScene() {
 	scene.fog = new THREE.Fog(0xf7d9aa, 100, 950);
 	
 	// Create the camera
-	aspectRatio = WIDTH / HEIGHT;
 	fieldOfView = 60;
 	nearPlane = 1;
 	farPlane = 10000;
@@ -33,9 +24,9 @@ export function createScene() {
 		);
 	
 	// Set the position of the camera
-	camera.position.x = Center.x;
-	camera.position.z = Center.z;
-	camera.position.y = Center.y;
+	camera.position.x = 0;
+	camera.position.y = 0;
+	camera.position.z = 200;
 	
 	// Create the renderer
 	renderer = new THREE.WebGLRenderer({ 
@@ -50,12 +41,13 @@ export function createScene() {
 
 	// Define the size of the renderer; in this case,
 	// it will fill the entire screen
-	renderer.setSize(WIDTH, HEIGHT);
+	renderer.setSize(Dimensions.width, Dimensions.height);
 	
 	// Enable shadow rendering
 	renderer.shadowMap.enabled = true;
 	
 	// Add the DOM element of the renderer to the 
 	// container we created in the HTML
+	container = document.getElementById('universe');
 	container.appendChild(renderer.domElement);
 }
