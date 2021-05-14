@@ -1,4 +1,4 @@
-import { Colors } from './colors.js';
+import { Colors } from './global.js';
 
 var container = document.getElementById('universe');
 var WIDTH = container.getBoundingClientRect().width;

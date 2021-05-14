@@ -1,3 +1,5 @@
+import { Center } from './global.js';
+
 export var 
 	scene, camera, fieldOfView, aspectRatio,
 	nearPlane, farPlane, HEIGHT, WIDTH, renderer, container;
@@ -31,9 +33,9 @@ export function createScene() {
 		);
 	
 	// Set the position of the camera
-	camera.position.x = 0;
-	camera.position.z = 200;
-	camera.position.y = 100;
+	camera.position.x = Center.x;
+	camera.position.z = Center.z;
+	camera.position.y = Center.y;
 	
 	// Create the renderer
 	renderer = new THREE.WebGLRenderer({ 
