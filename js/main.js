@@ -1,8 +1,8 @@
 
-import { createScene, scene, renderer, camera, WIDTH, HEIGHT} from './word.js';
+import { createScene, scene, renderer, camera, WIDTH, HEIGHT, container} from './word.js';
 import { createLights } from './lights.js';
 import { createSky, sky } from './sky.js';
-import { createCar, updateCar, handleMouseMove, car } from './car.js';
+import { createCar, updateCar, handleMouseClick, car } from './car.js';
 
 window.addEventListener('load', init, false);
 
@@ -19,14 +19,14 @@ function init() {
 	// createSky();
 
     //add the listener
-	document.addEventListener('mousemove', handleMouseMove, false);
+	container.addEventListener('click', handleMouseClick, false);
 
 	// start a loop
 	loop();
 }
 
 function loop() {
-	sky.mesh.rotation.y += .03;
+	sky.mesh.rotation.y += .02;
 
     // update the car on each frame
 	updateCar();

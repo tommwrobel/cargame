@@ -1,4 +1,4 @@
-import { Colors } from './global.js';
+import { Center, Colors } from './global.js';
 
 var container = document.getElementById('universe');
 var WIDTH = container.getBoundingClientRect().width;
@@ -23,8 +23,9 @@ export var car;
 
 export function createCar(scene){ 
 	car = new Car(Colors);
-	car.mesh.scale.set(.25,.25,.25);
-	car.mesh.position.y = 100;
+	car.mesh.scale.set( .25, .25, .25);
+	car.mesh.position.y = Center.y;
+	car.mesh.position.x = -80;
 	scene.add(car.mesh);
 }
 
@@ -32,56 +33,44 @@ export function animateCar() {
     car.mesh.rotate.z += .01
 }
 
+var mousePos = {
+    x: Center.x,
+    y: Center.y
+};
+
 export function updateCar(){
+	var targetY = mousePos.y;
 
-	// let's move the airplane between -100 and 100 on the horizontal axis, 
-	// and between 25 and 175 on the vertical axis,
-	// depending on the mouse position which ranges between -1 and 1 on both axes;
-	// to achieve that we use a normalize function (see below)
-	
-	var targetX = normalize(mousePos.x, -1, 1, -100, 100);
-	var targetY = normalize(mousePos.y, -1, 1, 25, 175);
+    // Move the car at each frame by adding a fraction of the remaining distance
+	car.mesh.position.y += (targetY - car.mesh.position.y)*0.1;
 
-	// update the airplane's position
-	car.mesh.position.y = targetY;
-	car.mesh.position.x = targetX;
-
-    if (car.mesh.rotation.z > 0.2) rotationUp = false;
-    if (car.mesh.rotation.z < -0.2) rotationUp = true;
-    car.mesh.rotation.z += rotationUp ? 0.002 : -0.002;
-
-    if (car.mesh.rotation.y > 0.2) rotationLeft = false;
-    if (car.mesh.rotation.y < -0.2) rotationLeft = true;
-    car.mesh.rotation.y += rotationLeft ? 0.005 : -0.005;
+	//Rotate the car proportionally to the remaining distance
+	car.mesh.rotation.z = (targetY - car.mesh.position.y) * 0.0128;
+	car.mesh.rotation.x = (car.mesh.position.y-targetY) * 0.0064;
 }
 
-function normalize(v,vmin,vmax,tmin, tmax){
 
+function normalize(v,vmin,vmax,tmin, tmax){
 	var nv = Math.max(Math.min(v,vmax), vmin);
 	var dv = vmax-vmin;
 	var pc = (nv-vmin)/dv;
 	var dt = tmax-tmin;
 	var tv = tmin + (pc*dt);
 	return tv;
-
 }
 
-var mousePos={x:0, y:0};
+export function handleMouseClick(event) {
 
-// now handle the mousemove event
+    let clickHeightPercentage = ((event.offsetY) / HEIGHT) * 100;
+    let carHeightPercentage = ((car.mesh.position.y - 180) / 180) * -100;
 
-export function handleMouseMove(event) {
+    console.log(carHeightPercentage);
 
-	// here we are converting the mouse position value received 
-	// to a normalized value varying between -1 and 1;
-	// this is the formula for the horizontal axis:
-	
-	var tx = 0;
+    if (clickHeightPercentage < carHeightPercentage && car.mesh.position.y < Center.y + 60) {
+        mousePos.y += 30;
+    }
 
-	// for the vertical axis, we need to inverse the formula 
-	// because the 2D y-axis goes the opposite direction of the 3D y-axis
-	
-	var ty = 1 - (event.clientY / HEIGHT) * 2;
-	mousePos = {x:tx, y:ty};
-
+    if (clickHeightPercentage > carHeightPercentage && car.mesh.position.y > Center.y - 60) {
+        mousePos.y -= 30;
+    };
 }
