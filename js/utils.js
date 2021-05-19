@@ -9,7 +9,6 @@ export const Colors = {
 	black: 0x111111
 };
 
-export var speed = 4;
 export var Dimensions = getDimensions();
 export var aspectRatio = Dimensions.width / Dimensions.height;
 export var Edges = getEdges();

@@ -1,4 +1,4 @@
-import { Dimensions, aspectRatio } from './globals.js';
+import { Dimensions, aspectRatio } from './utils.js';
 
 export var 
 	scene, camera, fieldOfView,
@@ -27,6 +27,15 @@ export function createScene() {
 	camera.position.x = 0;
 	camera.position.y = 0;
 	camera.position.z = 200;
+
+	// Creating lights
+	let hemisphereLight = new THREE.HemisphereLight(0xaaaaaa,0x000000, .9);
+	let shadowLight = new THREE.DirectionalLight(0xffffff, .9);
+
+	shadowLight.position.set(150, -100, 350);
+	
+	scene.add(hemisphereLight);  
+	scene.add(shadowLight);
 	
 	// Create the renderer
 	renderer = new THREE.WebGLRenderer({ 
@@ -50,4 +59,6 @@ export function createScene() {
 	// container we created in the HTML
 	container = document.getElementById('universe');
 	container.appendChild(renderer.domElement);
+
+	return scene;
 }

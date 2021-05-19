@@ -1,51 +1,148 @@
-
-import { createScene, scene, camera, container, renderer } from './word.js';
-import { createLights } from './lights.js';
-import { createSky, sky } from './sky.js';
-import { player, createPlayer, updatePlayer, handleMouseClick, handleKeyPress, checkCollisions } from './player.js';
-import { createObject, updateObject, objects } from './objects.js';
+import { createScene, camera, renderer, scene } from './word.js';
+import { createCoin, createSatellite, createComet, createPlayer } from './objects.js';
+import * as Utils from './utils.js';
 
 var clock = new THREE.Clock(false);
-var tt = 0.0;
+var timeCounter= 0.0;
 
 window.addEventListener('load', init, false);
 
 function init() {
-	// set up the scene, the camera and the renderer
-	createScene();
-	window.scene = scene;
+	window.carObjects = [];
+	window.carPoints = { btc: 0, bis: 0, doge: 0, gamb: 0 }
+	window.carLife = 100;
+	window.carSpeed = 2;
+	window.carColors = Utils.Colors;
+	window.carScene = createScene();
 
-	// add the lights
-	createLights(scene);
+	//createSky();
+	window.carPlayer = createPlayer();
+	window.carScene.add(window.carPlayer.mesh);
 
-	// add the objects
-	createSky(scene);
-	createPlayer(scene);
-	window.player = player;
-
-    //add the listener
-	container.addEventListener('click', handleMouseClick, false);
+	// container.addEventListener('click', handleMouseClick, false);
 	document.addEventListener('keydown', handleKeyPress, false);
 
-	// start a loop
+	// starting a loop
 	clock.start();
 	loop();
 }
 
 function loop() {
-	sky.mesh.rotation.y += .02;
+	// sky.mesh.rotation.y += .02;
 
-    // update the car on each frame
-	updatePlayer();
-    updateObject(scene);
-    checkCollisions(objects, scene);
+    window.carPlayer.update();
 
-	tt += clock.getDelta();
-	if (tt > 0.4) {
-		tt = 0.0;
-		createObject(scene);
+	timeCounter += clock.getDelta();
+	if (timeCounter > 0.5) {
+		timeCounter = 0.0;
+		
+		let random = Utils.getRandomInt(0, 5);
+		let obj = null;
+		switch (random) {
+			case 0:
+				obj = createCoin('btc');
+				break;
+			case 1:
+				obj = createCoin('doge');
+				break;
+			case 2:
+				obj = createCoin('bis');
+				break;
+			case 3:
+				obj = createCoin('gamb');
+				break;
+			case 4:
+				obj = createSatellite();
+				break;
+			case 5:
+				obj = createComet();
+				break;
+		}
+		window.carScene.add(obj.mesh);
+		window.carObjects.push(obj);
 	}
 
+	window.carObjects.forEach((obj, index) => {
+		if (obj != null) {
+			obj.update(window.carSpeed);
+			if (checkCollision(obj)) {
+				switch (obj.type) {
+					case 'coin':
+						window.carPlayer.mesh.position.x = -103;
+						destroy(index);
+						console.log('Trafiles', obj.coinType, '!');
+						updateScore(obj);
+						break;
+					case 'satellite':
+						window.carPlayer.mesh.position.x = -110;
+						destroy(index);
+						console.log('Uszkodziles samochod!');
+						break;
+					case 'comet':
+						window.carPlayer.mesh.position.x = -110;
+						destroy(index);
+						console.log('Uszkodziles samochod!');
+						break;
+				}
+			};
+		};
+		if (obj != null && obj.mesh.position.x < -Utils.Edges.rightX - 20) {
+			window.carScene.remove(obj.mesh);
+			obj = null;
+		}
+	});
+
 	requestAnimationFrame(loop);
-	renderer.render(scene, camera);
+	renderer.render(window.carScene, camera);
+}
+
+function checkCollision(obj) {
+	if (window.carPlayer.box3.intersectsBox(obj.box3)) {
+		return true;
+	}
+	return false;
+}
+
+function handleKeyPress(event) {
+    if (event.key == 'ArrowUp' && window.carPlayer.mesh.position.y <  45) {
+        window.carPlayer.targetYPosition += 40;
+    }
+
+    if (event.key == 'ArrowDown' && window.carPlayer.mesh.position.y > -45) {
+        window.carPlayer.targetYPosition -= 40;
+    };
+
+	if (event.key == 'ArrowRight') {
+        window.carSpeed += 0.5;
+    };
+
+	if (event.key == 'ArrowLeft') {
+        window.carSpeed -= 0.5;
+    };
+}
+
+function destroy(index) {
+	window.carScene.remove(window.carObjects[index].mesh);
+	window.carObjects[index] = null;
+}
+
+function updateScore(coin) {
+	switch (coin.coinType) {
+		case 'btc':
+			window.carPoints.btc += 1;
+			document.getElementById('btc').innerHTML = window.carPoints.btc;
+			break;
+		case 'doge':
+			window.carPoints.doge += 1;
+			document.getElementById('doge').innerHTML = window.carPoints.doge;
+			break;
+		case 'bis':
+			window.carPoints.bis += 1;
+			document.getElementById('bis').innerHTML = window.carPoints.bis;
+			break;
+		case 'gamb':
+			window.carPoints.gamb += 1;
+			document.getElementById('gamb').innerHTML = window.carPoints.gamb;
+			break;
+	}
 }

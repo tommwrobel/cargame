@@ -1,10 +1,10 @@
-import { Colors } from './globals.js';
+import { Colors } from './utils.js';
 
 export var sky;
 
-export function createSky(scene){
+export function createSky(){
 	sky = new Sky();
-	scene.add(sky.mesh);
+	window.carScene.add(sky.mesh);
 }
 
 var Sky = function(){
