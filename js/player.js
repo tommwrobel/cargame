@@ -45,11 +45,11 @@ var Player = function() {
 	this.mesh.add(wheel04);
 };
 
-export function createPlayer(scene){ 
+export function createPlayer(){ 
 	player = new Player(Colors);
 	playerBox = new THREE.Box3().setFromObject(player.mesh);
     player.mesh.position.x -= 100;
-	scene.add(player.mesh);
+	window.scene.add(player.mesh);
 }
 
 export function updatePlayer() {
@@ -78,19 +78,46 @@ export function handleMouseClick(event) {
     };
 }
 
-export function checkCollisions(objects, scene) {
+export function handleKeyPress(event) {
+	console.log('pressed');
+    if (event.key == 'ArrowUp' && player.mesh.position.y <  45) {
+        mousePos.y += 40;
+    }
+
+    if (event.key == 'ArrowDown' && player.mesh.position.y > -45) {
+        mousePos.y -= 40;
+    };
+}
+
+export function checkCollisions(objects) {
 	objects.forEach((object, index, objects) => {
 		if (object != null) {
 			let objectBox = new THREE.Box3().setFromObject(object.mesh);
-			console.log(object);
 
 			if (playerBox.intersectsBox(objectBox)) {
-				document.getElementById(object.type).innerHTML = parseInt(document.getElementById(object.type).innerHTML) + 1;
-				scene.remove(object.mesh);
-	
-				objects[index] = null;
-				console.log(index);
+				switch(object.type) {
+					case 'btc':
+						collisionWithCoin(object, index, objects);
+						break;
+					case 'eth':
+						collisionWithCoin(object, index, objects);
+						break;
+					case 'comet':
+						collisionWithComet(object, index, objects);
+						break;
+				}
 			}
 		}
     });
+}
+
+function collisionWithCoin(object, index, objects) {
+	document.getElementById(object.type).innerHTML = parseInt(document.getElementById(object.type).innerHTML) + 1;
+	window.scene.remove(object.mesh);
+	objects[index] = null;
+}
+
+function collisionWithComet(object, index, objects) {
+	window.scene.remove(player.mesh);
+	//objects[index] = null;
 }

@@ -5,9 +5,20 @@ export var objects = [];
 var Object = function(type) {
     this.mesh = new THREE.Object3D();
     this.type = type;
-
-	var geomCockpit = new THREE.CylinderGeometry(10, 10, 4, 32);
-	var matCockpit = new THREE.MeshPhongMaterial({ color: Colors.yellow, flatShading: false });
+    switch(type) {
+        case 'eth':
+            var geomCockpit = new THREE.CylinderGeometry(10, 10, 4, 32);
+            var matCockpit = new THREE.MeshPhongMaterial({ color: Colors.white, flatShading: false });
+            break;
+        case 'btc':
+            var geomCockpit = new THREE.CylinderGeometry(10, 10, 4, 32);
+            var matCockpit = new THREE.MeshPhongMaterial({ color: Colors.yellow, flatShading: false });
+            break;
+        case 'comet':
+            var geomCockpit = new THREE.CylinderGeometry(10, 10, 10, 32);
+            var matCockpit = new THREE.MeshPhongMaterial({ color: Colors.black, flatShading: false });
+            break;
+    }
 	var cockpit = new THREE.Mesh(geomCockpit, matCockpit);
 	cockpit.castShadow = true;
 	cockpit.receiveShadow = false;
@@ -16,8 +27,9 @@ var Object = function(type) {
 }
 
 export function createObject(scene) {
-    let objectTypes = ['eth', 'btc'];
-	let object = new Object(objectTypes[getRandomInt(0, 1)]);
+    console.log(window.asdf);
+    let objectTypes = ['eth', 'btc', 'comet'];
+	let object = new Object(objectTypes[getRandomInt(0, 2)]);
 
     object.mesh.position.y = getRandomInt(-2, 2) * 40;
     object.mesh.position.x = Edges.rightX;

@@ -2,7 +2,7 @@
 import { createScene, scene, camera, container, renderer } from './word.js';
 import { createLights } from './lights.js';
 import { createSky, sky } from './sky.js';
-import { createPlayer, updatePlayer, handleMouseClick, checkCollisions } from './player.js';
+import { player, createPlayer, updatePlayer, handleMouseClick, handleKeyPress, checkCollisions } from './player.js';
 import { createObject, updateObject, objects } from './objects.js';
 
 var clock = new THREE.Clock(false);
@@ -13,6 +13,7 @@ window.addEventListener('load', init, false);
 function init() {
 	// set up the scene, the camera and the renderer
 	createScene();
+	window.scene = scene;
 
 	// add the lights
 	createLights(scene);
@@ -20,9 +21,11 @@ function init() {
 	// add the objects
 	createSky(scene);
 	createPlayer(scene);
+	window.player = player;
 
     //add the listener
 	container.addEventListener('click', handleMouseClick, false);
+	document.addEventListener('keydown', handleKeyPress, false);
 
 	// start a loop
 	clock.start();
@@ -38,7 +41,7 @@ function loop() {
     checkCollisions(objects, scene);
 
 	tt += clock.getDelta();
-	if (tt > 1) {
+	if (tt > 0.4) {
 		tt = 0.0;
 		createObject(scene);
 	}
