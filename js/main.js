@@ -2,9 +2,11 @@
 import { createScene, scene, camera, container, renderer } from './word.js';
 import { createLights } from './lights.js';
 import { createSky, sky } from './sky.js';
-import { createCar, updateCar, handleMouseClick, car } from './car.js';
-import { createObject, updateObject, object } from './object.js';
-import { checkCollision } from './collision.js';
+import { createPlayer, updatePlayer, handleMouseClick, checkCollisions } from './player.js';
+import { createObject, updateObject, objects } from './objects.js';
+
+var clock = new THREE.Clock(false);
+var tt = 0.0;
 
 window.addEventListener('load', init, false);
 
@@ -17,13 +19,13 @@ function init() {
 
 	// add the objects
 	createSky(scene);
-	createCar(scene);
-    createObject(scene);
+	createPlayer(scene);
 
     //add the listener
 	container.addEventListener('click', handleMouseClick, false);
 
 	// start a loop
+	clock.start();
 	loop();
 }
 
@@ -31,13 +33,15 @@ function loop() {
 	sky.mesh.rotation.y += .02;
 
     // update the car on each frame
-	updateCar();
+	updatePlayer();
     updateObject(scene);
+    checkCollisions(objects, scene);
 
-    if (checkCollision(car, object, scene)) {
-        document.getElementById('points').innerHTML = parseInt(document.getElementById('points').innerHTML) + 10;
-        console.log("KOLIZJA!");
-    }
+	tt += clock.getDelta();
+	if (tt > 1) {
+		tt = 0.0;
+		createObject(scene);
+	}
 
 	requestAnimationFrame(loop);
 	renderer.render(scene, camera);
