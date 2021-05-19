@@ -1,14 +1,15 @@
 export const Colors = {
-	red:0xd83131,
-	white:0xd8d0d1,
-	brown:0x59332e,
+	red: 0xd83131,
+	white: 0xd8d0d1,
+	brown: 0x59332e,
 	yellow: 0xe8ac0c,
-	pink:0xF5986E,
-	brownDark:0x23190f,
-	blue:0x68c3c0,
+	pink: 0xF5986E,
+	brownDark: 0x23190f,
+	blue: 0x68c3c0,
+	black: 0x111111
 };
 
-export var speed = 2;
+export var speed = 4;
 export var Dimensions = getDimensions();
 export var aspectRatio = Dimensions.width / Dimensions.height;
 export var Edges = getEdges();

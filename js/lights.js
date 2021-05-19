@@ -11,7 +11,8 @@ export function createLights(scene) {
 	shadowLight = new THREE.DirectionalLight(0xffffff, .9);
 
 	// Set the direction of the light  
-	shadowLight.position.set(150, 350, 350);
+	// shadowLight.position.set(150, 350, 350);
+	shadowLight.position.set(150, -100, 350);
 	
 	// Allow shadow casting 
 	shadowLight.castShadow = true;

@@ -8,11 +8,41 @@ var Player = function() {
 	this.mesh = new THREE.Object3D();
 	
 	// Create the cabin
-	var geomCockpit = new THREE.BoxGeometry(25, 10, 10, 1, 1, 1);
+	var geomCockpit = new THREE.BoxGeometry(30, 10, 10, 1, 1, 1);
 	var matCockpit = new THREE.MeshPhongMaterial({ color:Colors.red, flatShading: true });
 	var cockpit = new THREE.Mesh(geomCockpit, matCockpit);
 	cockpit.receiveShadow = true;
+
+	var geomRoof = new THREE.BoxGeometry(2, 8, 9, 1, 1, 1);
+	var matRoof = new THREE.MeshPhongMaterial({ color:Colors.white, flatShading: true });
+	var roof = new THREE.Mesh(geomRoof, matRoof);
+	roof.position.set(4, 8, 0);
+	roof.rotation.z = 0.2;
+	roof.receiveShadow = true;
+
+	var geomWheel = new THREE.CylinderGeometry(4, 4, 1, 16);
+	var matWheel = new THREE.MeshPhongMaterial({ color:Colors.black, flatShading: true });
+	var wheel01 = new THREE.Mesh(geomWheel, matWheel);
+	var wheel02 = new THREE.Mesh(geomWheel, matWheel);
+	var wheel03 = new THREE.Mesh(geomWheel, matWheel);
+	var wheel04 = new THREE.Mesh(geomWheel, matWheel);
+
+	wheel01.position.set(8, -6, 5);
+	wheel02.position.set(8, -6, -5);
+	wheel03.position.set(-8, -6, -5);
+	wheel04.position.set(-8, -6, 5);
+
+	wheel01.rotation.x = Math.PI / 2;
+	wheel02.rotation.x = Math.PI / 2;
+	wheel03.rotation.x = Math.PI / 2;
+	wheel04.rotation.x = Math.PI / 2;
+
 	this.mesh.add(cockpit);
+	this.mesh.add(roof);
+	this.mesh.add(wheel01);
+	this.mesh.add(wheel02);
+	this.mesh.add(wheel03);
+	this.mesh.add(wheel04);
 };
 
 export function createPlayer(scene){ 
