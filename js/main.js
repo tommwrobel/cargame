@@ -1,4 +1,4 @@
-import { createScene, camera, renderer, scene } from './word.js';
+import { createScene, camera, renderer } from './word.js';
 import { createCoin, createSatellite, createComet, createPlayer } from './objects.js';
 import * as Utils from './utils.js';
 
@@ -14,6 +14,7 @@ function init() {
 	window.carSpeed = 2;
 	window.carColors = Utils.Colors;
 	window.carScene = createScene();
+	window.carEndGame = false;
 
 	//createSky();
 	window.carPlayer = createPlayer();
@@ -72,15 +73,18 @@ function loop() {
 						destroy(index);
 						console.log('Trafiles', obj.coinType, '!');
 						updateScore(obj);
+						window.carSpeed += 0.05;
 						break;
 					case 'satellite':
 						window.carPlayer.mesh.position.x = -110;
 						destroy(index);
+						updateLife(-20);
 						console.log('Uszkodziles samochod!');
 						break;
 					case 'comet':
 						window.carPlayer.mesh.position.x = -110;
 						destroy(index);
+						updateLife(-40);
 						console.log('Uszkodziles samochod!');
 						break;
 				}
@@ -91,9 +95,10 @@ function loop() {
 			obj = null;
 		}
 	});
-
-	requestAnimationFrame(loop);
-	renderer.render(window.carScene, camera);
+	if (window.carEndGame == false) {
+		requestAnimationFrame(loop);
+		renderer.render(window.carScene, camera);
+	}
 }
 
 function checkCollision(obj) {
@@ -145,4 +150,10 @@ function updateScore(coin) {
 			document.getElementById('gamb').innerHTML = window.carPoints.gamb;
 			break;
 	}
+}
+
+function updateLife(value) {
+	window.carLife += value;
+	document.getElementById('life').style.width = ((window.carLife * 2 > 0) ? window.carLife * 2 : 0) + 'px';
+	if (window.carLife <= 0) window.carEndGame = true;
 }

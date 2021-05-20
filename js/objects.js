@@ -51,10 +51,34 @@ export function createSatellite() {
 
 export function createComet() {
 	let object = new THREE.Object3D();
-    let geo = new THREE.BoxGeometry(16, 16, 16, 32);
-    let mat = new THREE.MeshPhongMaterial({ color: Utils.Colors.brownDark, flatShading: false });
-	let sat = new THREE.Mesh(geo, mat);
-	object.add(sat);
+    
+    let numOfElements = 12;
+
+    let geo = [];
+    for (let i = 0; i < numOfElements; i++) {
+        let randomSize = Utils.getRandomInt(4, 12);
+        geo.push(new THREE.BoxGeometry(randomSize, randomSize, randomSize, 16));
+    }
+
+    let mat = [
+        new THREE.MeshPhongMaterial({ color: Utils.Colors.brownDark, flatShading: false }),
+        new THREE.MeshPhongMaterial({ color: Utils.Colors.red, flatShading: false }),
+        new THREE.MeshPhongMaterial({ color: Utils.Colors.blue, flatShading: false }),
+        new THREE.MeshPhongMaterial({ color: Utils.Colors.white, flatShading: false })
+    ]
+
+    let mesh = [];
+    for (let i = 0; i < numOfElements; i++) {
+        mesh.push(new THREE.Mesh(geo[i], (mat[i] ? mat[i] : mat[0])));
+    }
+
+    for (let i = 0; i < numOfElements; i++) {
+        let randomX = Utils.getRandomInt(-8, 8);
+        let randomY = Utils.getRandomInt(-8, 8);
+        let randomZ = Utils.getRandomInt(-8, 8);
+        mesh[i].position.set(randomX, randomY, randomZ);
+        object.add(mesh[i]);
+    }
 
     //random vertical position
     object.position.y = Utils.getRandomInt(-2, 2) * 40;
@@ -67,8 +91,10 @@ export function createComet() {
         box3: new THREE.Box3().setFromObject(object),
         update: function(speed) {
             this.box3 = new THREE.Box3().setFromObject(this.mesh);
-            this.mesh.position.x -= speed * 1.6;
-            this.mesh.rotation.z -= .05;
+            this.mesh.position.x -= speed;
+            this.mesh.rotation.z -= .02;
+            this.mesh.rotation.x += .02;
+            this.mesh.rotation.y += .01;
         }
     }
 }

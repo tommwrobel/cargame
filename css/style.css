@@ -27,5 +27,14 @@ body {
 	right: 20px;
 	text-align: right;
 	color: #ffffff;
-	font: bold 28pt Arial,sans-serif;
+	font: bold 22pt Arial,sans-serif;
+}
+
+#life {
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+	width: 200px;
+	height: 20px;
+	background-color: green;
 }
