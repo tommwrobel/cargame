@@ -1,5 +1,5 @@
 import { createScene, camera, renderer } from './word.js';
-import { createCoin, createSatellite, createComet, createPlayer } from './objects.js';
+import { createCoin, createSatellite, createComet, createPlayer, createExplosion } from './objects.js';
 import * as Utils from './utils.js';
 
 var clock = new THREE.Clock(false);
@@ -10,8 +10,8 @@ window.addEventListener('load', init, false);
 function init() {
 	window.carObjects = [];
 	window.carPoints = { btc: 0, bis: 0, doge: 0, gamb: 0 }
-	window.carLife = 100;
-	window.carSpeed = 2;
+	window.carLife = 200;
+	window.carSpeed = 3;
 	window.carColors = Utils.Colors;
 	window.carScene = createScene();
 	window.carEndGame = false;
@@ -79,12 +79,24 @@ function loop() {
 						window.carPlayer.mesh.position.x = -110;
 						destroy(index);
 						updateLife(-20);
+
+						let satCenter = new THREE.Vector3; obj.box3.getCenter(satCenter);
+						let expSat = createExplosion(0, Utils.Colors.blue, satCenter);
+						window.carScene.add(expSat.mesh);
+						window.carObjects.push(expSat);
+
 						console.log('Uszkodziles samochod!');
 						break;
 					case 'comet':
 						window.carPlayer.mesh.position.x = -110;
 						destroy(index);
-						updateLife(-40);
+						updateLife(-20);
+
+						let comCenter = new THREE.Vector3; obj.box3.getCenter(comCenter);
+						let expCom = createExplosion(0, Utils.Colors.black, comCenter);
+						window.carScene.add(expCom.mesh);
+						window.carObjects.push(expCom);
+
 						console.log('Uszkodziles samochod!');
 						break;
 				}
@@ -102,7 +114,7 @@ function loop() {
 }
 
 function checkCollision(obj) {
-	if (window.carPlayer.box3.intersectsBox(obj.box3)) {
+	if (obj.type != 'bgobject' && window.carPlayer.box3.intersectsBox(obj.box3)) {
 		return true;
 	}
 	return false;
