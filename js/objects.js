@@ -28,16 +28,16 @@ export function createCoin(type) {
 export function createSatellite() {
 	let object = new THREE.Object3D();
     let geoBody = new THREE.CylinderGeometry(6, 8, 12, 16);
-    let mat = new THREE.MeshPhongMaterial({ color: Utils.Colors.blue, flatShading: false });
+    let mat = new THREE.MeshPhongMaterial({ color: Utils.Colors.white, flatShading: false });
 	let satBody = new THREE.Mesh(geoBody, mat);
     satBody.rotation.z = Math.PI / 2;
 	object.add(satBody);
 
-    let geoWing = new THREE.BoxGeometry(2, 16, 12, 32);
+    let geoWing = new THREE.BoxGeometry(2, 24, 12, 32);
     let wingRight = new THREE.Mesh(geoWing, mat);
     let wingLeft = new THREE.Mesh(geoWing, mat);
-    wingRight.position.set(0, 20, 0);
-    wingLeft.position.set(0, -20, 0);
+    wingRight.position.set(0, 22, 0);
+    wingLeft.position.set(0, -22, 0);
 
 	object.add(wingRight);
 	object.add(wingLeft);
@@ -65,9 +65,12 @@ export function createSatellite() {
 export function createComet() {
 	let object = new THREE.Object3D();
 
-    let mat = new THREE.MeshPhongMaterial({ color: Utils.Colors.brownDark, flatShading: false });
-    let geo = new THREE.DodecahedronGeometry(16, 0);
+    let mat = new THREE.MeshPhongMaterial({ color: Utils.Colors.darkGrey, flatShading: false });
+    let geo = new THREE.DodecahedronGeometry(24, 0);
     object.add(new THREE.Mesh(geo, mat));
+
+    let scale = Utils.getRandomInt(3, 10) * 0.1;
+    object.scale.set(scale, scale, scale);
 
     object.position.y = Utils.getRandomInt(-2, 2) * 40;
     object.position.x = Utils.Edges.rightX;
@@ -79,7 +82,7 @@ export function createComet() {
         box3: new THREE.Box3().setFromObject(object),
         update: function(speed) {
             let boxMesh = this.mesh.clone();
-            boxMesh.scale.set(0.7, 0.7, 0.7);
+            boxMesh.scale.set(0.7, 0.5, 0.7);
             this.box3 = new THREE.Box3().setFromObject(boxMesh);
             this.mesh.position.x -= speed;
             this.mesh.rotation.z -= .02;
@@ -152,7 +155,7 @@ export function createExplosion(size, color, location) {
         type: 'bgobject',
         update: function() {
             if (object != null && object.children[0].position.x - object.position.x < 160) {
-                let speed = window.carSpeed * 0.7;
+                let speed = 2.5;
                 object.children.forEach(obj => {
                     obj.position.x += (obj.position.x > 0) ? speed : -speed;
                     obj.position.y += (obj.position.y > 0) ? speed : -speed;

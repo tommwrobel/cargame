@@ -6,7 +6,9 @@ export const Colors = {
 	pink: 0xF5986E,
 	brownDark: 0x23190f,
 	blue: 0x68c3c0,
-	black: 0x111111
+	black: 0x111111,
+	grey: 0x888888,
+	darkGrey: 0x444444
 };
 
 export var Dimensions = getDimensions();

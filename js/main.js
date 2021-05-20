@@ -81,7 +81,7 @@ function loop() {
 						updateLife(-20);
 
 						let satCenter = new THREE.Vector3; obj.box3.getCenter(satCenter);
-						let expSat = createExplosion(0, Utils.Colors.blue, satCenter);
+						let expSat = createExplosion(0, Utils.Colors.white, satCenter);
 						window.carScene.add(expSat.mesh);
 						window.carObjects.push(expSat);
 
@@ -93,7 +93,7 @@ function loop() {
 						updateLife(-20);
 
 						let comCenter = new THREE.Vector3; obj.box3.getCenter(comCenter);
-						let expCom = createExplosion(0, Utils.Colors.black, comCenter);
+						let expCom = createExplosion(0, Utils.Colors.darkGrey, comCenter);
 						window.carScene.add(expCom.mesh);
 						window.carObjects.push(expCom);
 
