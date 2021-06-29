@@ -1,5 +1,5 @@
 import { createScene, camera, renderer } from './word.js';
-import { createCoin, createSatellite, createComet, createPlayer, createExplosion } from './objects.js';
+import { createCoin, createSatellite, createComet, createPlayer, createExplosion, createStars } from './objects.js';
 import * as Utils from './utils.js';
 
 var clock = new THREE.Clock(false);
@@ -19,6 +19,10 @@ function init() {
 	//createSky();
 	window.carPlayer = createPlayer();
 	window.carScene.add(window.carPlayer.mesh);
+
+	let stars = createStars();
+	window.carScene.add(stars.mesh);
+	window.carObjects.push(stars);
 
 	// container.addEventListener('click', handleMouseClick, false);
 	document.addEventListener('keydown', handleKeyPress, false);
@@ -81,7 +85,7 @@ function loop() {
 						updateLife(-20);
 
 						let satCenter = new THREE.Vector3; obj.box3.getCenter(satCenter);
-						let expSat = createExplosion(0, Utils.Colors.white, satCenter);
+						let expSat = createExplosion(1, Utils.Colors.white, satCenter);
 						window.carScene.add(expSat.mesh);
 						window.carObjects.push(expSat);
 
@@ -93,7 +97,7 @@ function loop() {
 						updateLife(-20);
 
 						let comCenter = new THREE.Vector3; obj.box3.getCenter(comCenter);
-						let expCom = createExplosion(0, Utils.Colors.darkGrey, comCenter);
+						let expCom = createExplosion(1, Utils.Colors.darkGrey, comCenter);
 						window.carScene.add(expCom.mesh);
 						window.carObjects.push(expCom);
 
@@ -102,7 +106,7 @@ function loop() {
 				}
 			};
 		};
-		if (obj != null && obj.mesh.position.x < -Utils.Edges.rightX - 20) {
+		if (obj != null && obj.type != 'bgobject' && obj.mesh.position.x < -Utils.Edges.rightX - 20) {
 			window.carScene.remove(obj.mesh);
 			obj = null;
 		}

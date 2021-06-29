@@ -1,4 +1,5 @@
-import { Dimensions, aspectRatio } from './utils.js';
+import { DataUtils } from './three.module.js';
+import * as Utils from './utils.js';
 
 export var 
 	scene, camera, fieldOfView,
@@ -16,9 +17,17 @@ export function createScene() {
 	fieldOfView = 60;
 	nearPlane = 1;
 	farPlane = 10000;
+	// camera = new THREE.OrthographicCamera(
+	// 	-Utils.Edges.rightX,
+	// 	Utils.Edges.rightX,
+	// 	Utils.Edges.topY,
+	// 	-Utils.Edges.topY,
+	// 	nearPlane,
+	// 	farPlane
+	// )
 	camera = new THREE.PerspectiveCamera(
 		fieldOfView,
-		aspectRatio,
+		Utils.aspectRatio,
 		nearPlane,
 		farPlane
 		);
@@ -50,7 +59,7 @@ export function createScene() {
 
 	// Define the size of the renderer; in this case,
 	// it will fill the entire screen
-	renderer.setSize(Dimensions.width, Dimensions.height);
+	renderer.setSize(Utils.Dimensions.width, Utils.Dimensions.height);
 	
 	// Enable shadow rendering
 	renderer.shadowMap.enabled = true;

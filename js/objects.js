@@ -1,4 +1,5 @@
 import * as Utils from './utils.js';
+import { GLTFLoader } from './GLTFLoader.js';
 
 export function createCoin(type) {
 	let object = new THREE.Object3D();
@@ -93,19 +94,26 @@ export function createComet() {
 }
 
 export function createPlayer() {
+
 	let object = new THREE.Object3D();
 
-    let geoBody = new THREE.BoxGeometry(30, 10, 10, 1, 1, 1);
-	let matBody = new THREE.MeshPhongMaterial({ color: Utils.Colors.red, flatShading: true });
-	let body = new THREE.Mesh(geoBody, matBody);
-    object.add(body);
+    const loader = new GLTFLoader();
+    loader.load('../assets/playerModel.glb', function(gltf) {
+        object.add(gltf.scene);
+        object.scale.set(12, 12, 12);
+    });
 
-	let geoRoof = new THREE.BoxGeometry(2, 8, 9, 1, 1, 1);
-	let matRoof = new THREE.MeshPhongMaterial({ color: Utils.Colors.white, flatShading: true });
-	let roof = new THREE.Mesh(geoRoof, matRoof);
-	roof.position.set(4, 8, 0);
-	roof.rotation.z = 0.2;
-    object.add(body);
+    // let geoBody = new THREE.BoxGeometry(30, 10, 10, 1, 1, 1);
+	// let matBody = new THREE.MeshPhongMaterial({ color: Utils.Colors.red, flatShading: true });
+	// let body = new THREE.Mesh(geoBody, matBody);
+    // object.add(body);
+
+	// let geoRoof = new THREE.BoxGeometry(2, 8, 9, 1, 1, 1);
+	// let matRoof = new THREE.MeshPhongMaterial({ color: Utils.Colors.white, flatShading: true });
+	// let roof = new THREE.Mesh(geoRoof, matRoof);
+	// roof.position.set(4, 8, 0);
+	// roof.rotation.z = 0.2;
+    // object.add(body);
 
     object.position.x = -100;
 
@@ -125,7 +133,7 @@ export function createPlayer() {
     }
 }
 
-export function createExplosion(size, color, location) {
+export function createExplosion(scale, color, location) {
     let object = new THREE.Object3D();
 
 	let mat = new THREE.MeshPhongMaterial({ color: color, flatShading: true });
@@ -149,6 +157,7 @@ export function createExplosion(size, color, location) {
 
     object.position.set(location.x - 5, location.y, location.z);
     object.rotation.x = Math.PI / 3;
+    object.scale.set(scale, scale, scale);
 
     return {
         mesh: object,
@@ -171,6 +180,35 @@ export function createExplosion(size, color, location) {
                 window.carScene.remove(object);
                 object = null;
             }
+        }
+    }
+}
+
+export function createStars() {
+    let object = new THREE.Object3D();
+
+    let starCount = 120;
+
+    let geo = new THREE.PlaneGeometry(2, 2, 2);
+	let mat = new THREE.MeshPhongMaterial({ color: Utils.Colors.white, flatShading: true });
+
+    for (let i = 0; i < starCount; i++) {
+        let star = new THREE.Mesh(geo, mat);
+        star.position.set(
+            Utils.getRandomInt( -2 * Utils.Edges.rightX, 4 * Utils.Edges.rightX),
+            Utils.getRandomInt(-Utils.Edges.topY, Utils.Edges.topY),
+            -40
+            );
+        object.add(star);
+    }
+
+    object.position.x = 1 * Utils.Edges.rightX;
+
+    return {
+        mesh: object,
+        type: 'bgobject',
+        update: function() {
+            object.position.x -= 0.5;
         }
     }
 }
